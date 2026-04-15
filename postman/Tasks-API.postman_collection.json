@@ -28,6 +28,54 @@
           }
         },
         {
+          "name": "List completed tasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?completed=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "completed",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Returns only tasks where completed=true."
+          }
+        },
+        {
+          "name": "List incomplete tasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tasks?completed=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "completed",
+                  "value": "false"
+                }
+              ]
+            },
+            "description": "Returns only tasks where completed=false."
+          }
+        },
+        {
           "name": "Get task by id",
           "request": {
             "method": "GET",
