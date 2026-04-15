@@ -8,6 +8,7 @@ import com.example.tasks.service.TaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,7 +48,42 @@ class TaskServiceTest {
 
     @Test
     void findAll_isEmptyInitially() {
-        assertThat(service.findAll()).isEmpty();
+        assertThat(service.findAll(null)).isEmpty();
+    }
+
+    @Test
+    void findAll_withNullParameter_returnsAllTasks() {
+        service.create(createRequest("Task 1", "desc", true));
+        service.create(createRequest("Task 2", "desc", false));
+
+        List<Task> results = service.findAll(null);
+
+        assertThat(results).hasSize(2);
+    }
+
+    @Test
+    void findAll_withTrueParameter_returnsOnlyCompletedTasks() {
+        service.create(createRequest("Task 1", "desc", true));
+        service.create(createRequest("Task 2", "desc", false));
+        service.create(createRequest("Task 3", "desc", true));
+
+        List<Task> results = service.findAll(true);
+
+        assertThat(results).hasSize(2);
+        assertThat(results).extracting(Task::isCompleted).containsOnly(true);
+    }
+
+    @Test
+    void findAll_withFalseParameter_returnsOnlyIncompleteTasks() {
+        service.create(createRequest("Task 1", "desc", true));
+        Task incompleteTask = service.create(createRequest("Task 2", "desc", false));
+        service.create(createRequest("Task 3", "desc", true));
+
+        List<Task> results = service.findAll(false);
+
+        assertThat(results).hasSize(1);
+        assertThat(results).extracting(Task::getId).containsExactly(incompleteTask.getId());
+        assertThat(results).extracting(Task::isCompleted).containsOnly(false);
     }
 
     @Test

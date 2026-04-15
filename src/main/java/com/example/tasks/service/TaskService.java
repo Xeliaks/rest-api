@@ -1,11 +1,5 @@
 package com.example.tasks.service;
 
-import com.example.tasks.dto.TaskCreateRequest;
-import com.example.tasks.dto.TaskPatchRequest;
-import com.example.tasks.dto.TaskUpdateRequest;
-import com.example.tasks.model.Task;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +7,28 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.example.tasks.dto.TaskCreateRequest;
+import com.example.tasks.dto.TaskPatchRequest;
+import com.example.tasks.dto.TaskUpdateRequest;
+import com.example.tasks.model.Task;
 
 @Service
 public class TaskService {
 
     private final Map<UUID, Task> store = new ConcurrentHashMap<>();
 
-    public List<Task> findAll() {
-        return new ArrayList<>(store.values());
+    public List<Task> findAll(Boolean completed) {
+        if (completed == null) {
+            return new ArrayList<>(store.values());
+        }
+        
+        return store.values().stream()
+                .filter(task -> task.isCompleted() == completed)
+                .collect(Collectors.toList());
     }
 
     public Optional<Task> findById(UUID id) {

@@ -2,11 +2,13 @@ package com.example.tasks.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Schema(description = "Payload to create a task")
 public class TaskCreateRequest {
 
-    @NotBlank
+    @NotBlank(message = "Title must not be blank")
+    @Size(min = 3, max = 100, message = "Title length must be between 3 and 100 characters")
     @Schema(description = "Short title", example = "Buy groceries", requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
